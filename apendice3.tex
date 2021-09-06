@@ -1,0 +1,193 @@
+\section{Generador de graficas}
+\label{Apendice3:XXX}
+\begin{center}
+\begin{footnotesize}
+\begin{verbatim}
+import csv
+import matplotlib.pyplot as plt
+import numpy as np
+from colorama import Fore, Style
+import pandas as pd
+import os 
+
+CSVPATH="/Users/b3cl0s3r/Desktop/final-output/csv"
+ITERATIONS=20
+
+results = dict()
+nodes = dict()
+
+def generateSpeedUpPlot(processors_int, speedup, operation): 
+    plt.plot(processors_int, speedup["rayo"], marker='o', label="Rayo")
+    plt.autoscale(True, axis='x')
+    plt.xticks(processors_int)
+    plt.plot(processors_int, speedup["centella"], marker='o', label="Centella")
+    plt.title("Speedup "+operation.upper())
+    plt.xlabel('Procesadores', fontsize=14)
+    plt.ylabel('SpeedUp', fontsize=14)
+    plt.plot(processors_int, processors_int, '--', color="red", label="Ideal")
+    plt.legend()
+    plt.savefig("plots/speed-up-"+operation+".png")
+    plt.cla()
+    plt.clf()
+
+def generateEfficiencyPlot(processors_int, efficiency, operation): 
+    plt.plot(processors_int, efficiency["rayo"], marker='o', label="Rayo")
+    plt.autoscale(True, axis='x')
+    plt.xticks(processors_int)
+    plt.plot(processors_int, efficiency["centella"], marker='o', label="Centella")
+    plt.title("Eficiencia "+operation.upper())
+    plt.xlabel('Procesadores', fontsize=14)
+    plt.ylabel('Eficiencia', fontsize=14)
+    plt.axhline(y=1, color='r', linestyle='--', label="Ideal")
+    plt.legend()
+    plt.savefig("plots/efficiency-"+operation+".png")
+    plt.cla()
+    plt.clf()
+
+def generateRedundancyPlot(processors_int, redundancy, operation): 
+    plt.plot(processors_int, redundancy["rayo"], marker='o', label="Rayo")
+    plt.autoscale(True, axis='x')
+    plt.xticks(processors_int)
+    plt.plot(processors_int, redundancy["centella"], marker='o', label="Centella")
+    plt.title("Redundancia "+operation.upper())
+    plt.xlabel('Procesadores', fontsize=14)
+    plt.ylabel('Redundancia', fontsize=14)
+    plt.legend()
+    plt.savefig("plots/redundancy-"+operation+".png")
+    plt.cla()
+    plt.clf()
+    
+def generateUtilizationPlot(processors_int, utilization, operation): 
+    plt.plot(processors_int, utilization["rayo"], marker='o', label="Rayo")
+    plt.autoscale(True, axis='x')
+    plt.xticks(processors_int)
+    plt.plot(processors_int, utilization["centella"], marker='o', label="Centella")
+    plt.title("Utilizacion "+operation.upper())
+    plt.xlabel('Procesadores', fontsize=14)
+    plt.ylabel('Utilizacion', fontsize=14)
+    plt.legend()
+    plt.savefig("plots/utilizacion-"+operation+".png")
+    plt.cla()
+    plt.clf()
+
+def generateQualityPlot(processors_int, quality, operation): 
+    plt.plot(processors_int, quality["rayo"], marker='o', label="Rayo")
+    plt.autoscale(True, axis='x')
+    plt.xticks(processors_int)
+    plt.plot(processors_int, quality["centella"], marker='o', label="Centella")
+    plt.title("Calidad "+operation.upper())
+    plt.xlabel('Procesadores', fontsize=14)
+    plt.ylabel('Calidad del paralelismo', fontsize=14)
+    plt.legend()
+    plt.savefig("plots/calidad-"+operation+".png")
+    plt.cla()
+    plt.clf()
+
+def generateBoxPlot(processors_int, time_array, operation):
+    rayo = plt.boxplot(time_array["rayo"], positions=processors_int)
+    centella = plt.boxplot(time_array["centella"], positions=processors_int)
+    set_box_color(rayo, '#D7191C') 
+    set_box_color(centella, '#2C7BB6')
+    plt.autoscale(True, axis='x')
+    plt.xlabel('Procesadores', fontsize=14)
+    plt.ylabel('Tiempo de ejecución', fontsize=14)
+    plt.title("Boxplot "+operation.upper())
+    plt.plot([], c='#D7191C', label='Rayo')
+    plt.plot([], c='#2C7BB6', label='Centella')
+    plt.legend()
+    plt.savefig("plots/boxplot-"+operation+".png")
+    plt.cla()
+    plt.clf()
+
+def set_box_color(bp, color):
+    plt.setp(bp['boxes'], color=color)
+    plt.setp(bp['whiskers'], color=color)
+    plt.setp(bp['caps'], color=color)
+    plt.setp(bp['medians'], color=color)
+    plt.setp(bp['fliers'], color=color)
+    plt.setp(bp['means'], color=color)
+    
+for filename in os.listdir(CSVPATH):
+    operation=filename.split("-")[1].split(".")[0]
+    
+    if operation not in results:
+        results[operation] = dict()
+    
+    node=filename.split("-")[0]
+    nodes[node] = ""
+    results[operation][node] = dict()
+
+    with open('../csv/'+filename, newline='') as csvfile:
+        reader = csv.reader(csvfile, delimiter=',', quotechar='|')
+        next(reader, None)
+        csvcontent = list(reader)
+
+        # Mapping data
+        for row in csvcontent:
+            processors=row[5]
+            if processors not in results[operation][node]:
+                results[operation][node][processors] = dict()
+                results[operation][node][processors]["time"] = 0.0
+                results[operation][node][processors]["mops"] = 0.0
+                results[operation][node][processors]["time_array"] = []
+                
+            
+            time=row[0]
+            mops=row[1]
+            results[operation][node][processors]["time"] += float(time)
+            results[operation][node][processors]["mops"] += float(mops)
+            results[operation][node][processors]["time_array"].append(float(time))
+    
+    processors=list(results[operation][node].keys())
+    for processor in processors:
+        results[operation][node][processor]["time"] /= ITERATIONS
+        results[operation][node][processor]["mops"] /= ITERATIONS
+        # Tiempo de ejecucion 1 nodo entre Tiempo de ejecucion N nodos
+        results[operation][node][processor]["speedup"] = results[operation][node]["1"]["time"] / results[operation][node][processor]["time"] 
+        results[operation][node][processor]["efficiency"] = results[operation][node][processor]["speedup"] / int(processor)
+        results[operation][node][processor]["redundancy"] = results[operation][node][processor]["mops"] / results[operation][node]["1"]["mops"] 
+        results[operation][node][processor]["utilization"] = results[operation][node][processor]["mops"] * results[operation][node][processor]["efficiency"]
+        results[operation][node][processor]["quality"] = results[operation][node][processor]["speedup"] * results[operation][node][processor]["efficiency"] / results[operation][node][processor]["redundancy"]
+
+# Generate statistics
+nodes=list(nodes.keys())
+operations=list(results.keys())
+
+for operation in operations:
+    
+    speedup=dict()
+    efficiency=dict()
+    redundancy=dict()
+    utilization=dict()
+    quality=dict()
+    time_array=dict()
+
+    for node in nodes:   
+        # Initialize arrays
+        processors=list(results[operation][node].keys())
+        processors_int=[ int(i) for i in list(results[operation][node].keys()) ]
+        speedup[node]=[]
+        efficiency[node]=[]
+        redundancy[node]=[]
+        utilization[node]=[]
+        quality[node]=[]
+        time_array[node]=[]
+        
+        for processor in processors:
+            speedup[node].append(results[operation][node][processor]["speedup"])
+            efficiency[node].append(results[operation][node][processor]["efficiency"])
+            redundancy[node].append(results[operation][node][processor]["redundancy"])
+            utilization[node].append(results[operation][node][processor]["utilization"])
+            quality[node].append(results[operation][node][processor]["quality"])
+            time_array[node].append(results[operation][node][processor]["time_array"])
+    
+    # Generate plots
+    generateSpeedUpPlot(processors_int, speedup, operation)
+    generateEfficiencyPlot(processors_int, efficiency, operation)
+    generateRedundancyPlot(processors_int, redundancy, operation)
+    generateUtilizationPlot(processors_int, utilization, operation)
+    generateQualityPlot(processors_int, quality, operation)
+    generateBoxPlot(processors_int, time_array, operation)
+\end{verbatim}
+\end{footnotesize}
+\end{center}\vspace{4mm}

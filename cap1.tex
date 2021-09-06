@@ -1,45 +1,90 @@
-\section{Sección Uno}
-\subsection{Apartado Uno}
-\begin{large}
-Texto del apartado uno
+\section{Computación de altas prestaciones}
+\vspace{2mm}
+La computación de altas prestaciones (HPC, High Performance Computing por sus siglas en inglés) es una forma de procesar grandes volúmenes de datos a velocidades muy altas utilizando varios ordenadores y dispositivos de almacenamiento \cite{hpccomputing}. Este campo nace de la necesidad de resolver problemas computacionales muy complejos, generalmente de la ciencia y de la ingeniería. 
+\vspace{2mm}
 
-Esto es un ejemplo de cita~\cite{Eiben:2015}.
+\vspace{2mm}
+Numerosas son las aplicaciones que tiene \cite{hpcexamples} y los beneficios que aporta a los ciudadanos, a la industria y a la ciencia \cite{benefitscomputing}.
+\vspace{4mm}
+
+En los beneficios para los ciudadanos, la supercomputación es clave para el avance de la medicina: permite descubrir nuevos medicamentos, desarrollar terapias médicas que cubran necesidades individuales y estudiar enfermedades genéticas poco comunes. Ha permitido en la actualidad desarrollar los tratamientos para el COVID-19. Adicionalmente, permite monitorizar los efectos del cambio climático así como mejorar nuestro conocimiento de los procesos geofísicos y realizar simulaciones que predigan la evolución del tiempo a partir de sus patrones.
+
+\vspace{2mm}
+Para la industria (automóvil, aeroespacial, energías renovables), los supercomputadores permiten innovar, ser más productivos y escalar con productos de mayor valor y servicio, reduciendo los ciclos de diseño y producción y acelerando el diseño de nuevos materiales, gracias a que minimiza los costes, incrementa la eficiencia de recursos y acorta y optimiza los procesos de decisión.
+\vspace{2mm}
+
+Por último, en la ciencia, permite avanzar los conocimientos que tenemos sobre la materia y explorar el universo, así como modelar la atmósfera y el fenómeno oceánico a nivel planetario.
+\vspace{4mm}
+
+Un ejemplo de sistema de computación de altas prestaciones existentes podría ser el Teide-HPC \cite{teidehpc}, perteneciente al ITER (Instituto Tecnológico y de Energías Renovables) y que se encuentra en Tenerife. Está compuesto por 1100 servidores de cómputo Fujitsu, con un total de 17800 cores de cómputo y 36 TB de memoria, siendo así el segundo más potente de España y, hasta el 2015, uno de los top 500 supercomputadores más potentes del mundo \cite{teidehpcranking}.
+\vspace{2mm}
+
+En España se ubica también el supercomputador Marenostrum \cite{marenostrum}, que es considerado el sexagésimo tercer computador más potente del mundo en la última revisión de junio de 2021 \cite{marenostrumtop}. La última versión del Marenostrum tiene un rendimiento pico de 13.9 flops y se compone de dos bloques: uno de propósito general, que tiene 165.888 procesadores en total y una memoria central de 390 terabytes, y otro de tecnologías emergentes, que está formado por tres clusters de tecnologías que se están desarrollando actualmente en Estados Unidos y Japón para la nueva generación de supercomputadores pre-exascala.
+
+\vspace{2mm}
+
+A nivel Europeo, el sector de la computación de altas prestaciones no para de crecer. Actualmente, existe la iniciativa Eurohpc \cite{eurohpc} que, con un presupuesto de mil millones de euros, se están construyendo 7 supercomputadores en toda Europa,  se espera que dos de ellos estén dentro del top 5 mundial: LUMI, localizado en Finlandia, con un rendimiento máximo de 552 petaflops y Leonardo, en Italia, con un rendimiento máximo de 322.6 petaflops.
+
+
+\vspace{4mm}
+En la computación de altas prestaciones no importa únicamente la cantidad de núcleos y la potencia que tiene el hardware, sino que también debe tenerse en cuenta cómo se desarrolla el software que va a ejecutarse sobre la máquina, para maximizar el rendimiento. Para ello, se emplea la programación paralela.
+
+\section{Programación paralela}
+
+La programación paralela es una técnica en la que muchas instrucciones se ejecutan de forma simultánea. Se basa en el principio de "Divide y vencerás": los problemas grandes se pueden dividir en partes más pequeñas que pueden resolverse de forma concurrente. 
+\vspace{2mm}
+Existen varios tipos de computación paralela \cite{tiposparalelismo}:
+\vspace{2mm}
+\begin{itemize}
+    \item \textbf{Paralelismo a nivel de bit: } cuando se aumenta el tamaño de la palabra del procesador, se habla de paralelismo a nivel de bit.
+    \vspace{2mm}
+
+    Por ejemplo, al operar con dos números de 16 bits sobre un procesador de 8 bits, se requeriría de dos instrucciones, mientras que si el procesador fuera de 16 bits, esta se podría realizar en una sola instrucción.
+    
+    \item \textbf{Paralelismo a nivel de instrucción: } consiste en cambiar el orden de las instrucciones de un programa y juntarlas en grupos, siempre sin alterar el resultado final del programa.
+    \vspace{2mm}
+
+    Esto se puede hacer gracias a que los procesadores modernos tienen N etapas por los que pasan las instrucciones, por lo que ese procesador puede ejecutar hasta N instrucciones diferentes simultáneamente con la ordenación y agrupación adecuada.
+
+    \item \textbf{Paralelismo de datos: } cada procesador realiza la misma tarea sobre un subconjunto independiente de datos. 
+    
+    Es muy común utilizarlo en big data, especialmente cuando se opera con una gran cantidad de datos que no es posible cargar en memoria.
+    
+    \item \textbf{Paralelismo de tareas: } cada hilo realiza una tarea distinta e independiente al resto.
+    
+    Un ejemplo podría ser una aplicación de mensajería instantánea, donde un hilo se encuentra pendiente para recibir información y otro está pendiente para la entrada de texto del cliente.
+\end{itemize}
+\vspace{2mm}
+
+En los últimos años, el interés por la computación paralela aplicada en la computación de altas prestaciones ha aumentado debido a las restricciones físicas que impiden el escalado en frecuencia del hardware. Los ordenadores paralelos se pueden clasificar según el nivel de paralelismo que admite su hardware \cite{parallelcomputers}:
+\vspace{2mm}
 
 \begin{itemize}
-   \item Item 1
-   \item Item 2
-   \item Item 3
-   \item Item 4
+    \item \textbf{Procesamiento multinúcleo.} La máquina tiene más de una unidad de CPU, por lo que puede procesar múltiples instrucciones por ciclo de secuencias. Si el núcleo es superescalar, adicionalmente, en cada ciclo puede ejecutar múltiples instrucciones de un flujo de instrucciones.
+    \item \textbf{Multiprocesamiento simétrico.} Se trata de un sistema computacional con múltiples procesadores iguales que comparten memoria y están conectados a través de un bus.
+    \item \textbf{Computación en cluster.} Se trata de un grupo de ordenadores independientes que trabajan en colaboración por red. El más típico es el cluster Beowulf \cite{beowulf}, que implementa múltiples ordenadores idénticos conectados a una red local por Ethernet.
+    \item \textbf{Computación distribuida. } Se hace uso de ordenadores que se comunican a través de Internet para trabajar en un problema dado. Normalmente, se refiere a problemas vergonzosamente paralelos, ya que la latencia es demasiado alta y el ancha de banda es bajo.
 \end{itemize}
-\end{large}
 
-\section{Sección Dos}
+\vspace{2mm}
+Los dos paradigmas principales de la programación paralela son el paso de mensajes y la memoria compartida \cite{paradigmasparalelismo}.
+\vspace{2mm}
 
-\begin{large}
-\begin{itemize}
-   \item Item 1
-   \item Item 2
-   \item Item 3
-\end{itemize}
-\end{large}
+El paradigma de paso de mensajes es ampliamente utilizado en el software moderno para ejecutar tareas sincronizadas entre varios ordenadores.
 
-\section{Sección Tres}
+\vspace{2mm}
+Para ello, se intercambia información de forma síncrona o asíncrona. La manera síncrona es sencilla de implementar, pero su inconveniente es que es poco flexible, ya que bloquea el proceso hasta que se realiza el intercambio de mensajes entre procesos. El intercambio de mensajes de forma asíncrona no produce bloqueos en el código, sin embargo, puede generar fallos de seguridad cuando se intercambian y manipulan variables.
 
-\begin{large}
-Bla, bla, bla.
-\end{large}
+\vspace{2mm}
+En el paradigma de memoria compartida, el intercambio de datos entre programas se realiza reservando un área de RAM en la que otro proceso puede acceder. Así, cuando se modifiquen valores dentro de este área, será visible para los demás procesos.
 
-\section{Sección Cuatro}
+\vspace{2mm}
+El desarrollo de programas informáticos paralelos es más complejo que los secuenciales. 
+\vspace{2mm}
 
-\begin{large}
-Bla, bla, bla.
-\end{large}
+La concurrencia introduce nuevos tipos de errores de software, como las condiciones de carrera y añade nuevos problemas como la sincronización entre diferentes subtareas. 
+\vspace{2mm}
 
-\newpage
 
-\begin{figure}[htb]
-   \centering
-   \includegraphics[width=0.8\linewidth]{images/figura_1}
-   \caption{Ejemplo de figura}
-   \label{chapter:intro}
-\end{figure}
+Además, no todas las paralelizaciones conllevan una aceleración. Generalmente, mientras una tarea se divida en cada vez más hilos, estos hilos pasan una porción cada vez mayor de su tiempo comunicándose entre sí. Eventualmente, la sobrecarga de comunicación domina el tiempo empleado para resolver el problema, y la paralelización adicional aumenta la cantidad de tiempo requerido para terminar.
+\vspace{2mm}

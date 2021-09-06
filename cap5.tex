@@ -1,1 +1,25 @@
-Este capítulo es obligatorio. Toda memoria de Trabajo de Fin de Grado debe incluir unas conclusiones y unas líneas de trabajo futuro 
+\section{Conclusiones}
+
+La computación de altas prestaciones está a la última orden del día. La tendencia del mundo actual es seguir mejorando y exprimiendo al máximo el potencial de la tecnología, con el fin de avanzar en la ciencia.
+\vspace{2mm}
+
+Dos tendencias actuales lo confirman: el desarrollo de ordenadores cuánticos e instalación de más supercomputadores por el mundo y, quizás la más desapercibida, los desarrollos de vacunas del coronavirus, descubrimientos y estudios continuos en astronomía y el modelado del tiempo para su predicción. 
+\vspace{2mm}
+
+Implementar un sistema de computación de altas prestaciones es relativamente sencillo. Aunque existen diversas soluciones empresariales, es posible crearse un sistema propio combinando distintas herramientas gratuitas y de código libre, a cambio del tiempo que cuesta implementar y depurar y el precio a pagar por las máquinas y su mantenimiento energético mensual.
+\vspace{2mm}
+
+Como mantener múltiples sistemas puede ser una labor tediosa, es conveniente seguir una serie de buenas prácticas. Esencialmente, se puede resumir en que las tareas relacionadas con sistemas solo se tengan que hacer una única vez, independientemente cuánto de grande sea el sistema. Por eso, es conveniente tener todos los recursos centralizados y compartidos con los distintos nodos, así como disponer en cada nodo únicamente lo necesario para ejercer su función dentro del \emph{cluster}.
+
+\section{Líneas futuras}
+
+El trabajo se puede continuar por diversas líneas.
+\vspace{4mm}
+
+En primer lugar, se puede ampliar el sistema con más nodos de cómputo que, incluso, podrían incluir alguna tarjeta gráfica para calcular modelos de inteligencia artificial o realizar grandes operaciones con un gran volumen de datos, así como ampliar el software proporcionado en el \emph{cluster}.
+\vspace{4mm}
+
+Por otro lado, se puede utilizar Ansible \cite{ansible} y preparar con él algún script para actualizar todos los sistemas a su última versión y automatizar la configuración de un nuevo nodo.
+\vspace{4mm}
+
+Por último, se podría incorporar Slurm Web \cite{slurmweb}, para visualizar de manera gráfica el estado y la disponibilidad de los recursos, los trabajos que se encuentran en cola y aquellos que están ejecutándose.

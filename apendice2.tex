@@ -1,5 +1,40 @@
-\section{Otro apéndice: Sección 1}
-texto
+\section{Script generador CSV}
+\label{Apendice2:XXX}
 
-\section{Otro apéndice: Sección 2}
-texto
+\begin{center}
+\begin{footnotesize}
+\begin{verbatim}
+#!/bin/bash
+
+LOGS_DIR="/home/pladmin/pruebas/scripts/output/"
+PARSED_LOGS_OUTPUT="/home/pladmin/pruebas/parsed-output/"
+LOGS_FILES=$(ls $LOGS_DIR)
+FILE_DELIMITER="EJECUCION DE"
+file=$(echo "$LOGS_FILES" | head -n 1)
+FILE_NAMES=($(cat $LOGS_DIR/$file | grep "$FILE_DELIMITER" | cut -d " " -f 3))
+
+for file in $LOGS_FILES;
+do
+	delimiters=($(cat ${LOGS_DIR}${file} | grep -n "EJECUCION DE" | cut -d ":" -f 1))
+	node=$(echo $file | cut -d "-" -f 1)
+	echo "EJECUCION DE ${file}" >> ${PARSED_LOGS_OUTPUT}$node-${FILE_NAMES[0]}
+ 	sed -n "$(( ${delimiters[0]}+1 )), $(( ${delimiters[1]}-1 ))p" "${LOGS_DIR}${file}" >> ${PARSED_LOGS_OUTPUT}$node-${FILE_NAMES[0]}
+        echo '$(( ${delimiters[0]}+1 )), $(( ${delimiters[1]}-1 ))p' "${LOGS_DIR}${file}"
+	echo "EJECUCION DE ${file}" >> ${PARSED_LOGS_OUTPUT}$node-${FILE_NAMES[1]}
+	sed -n "$(( ${delimiters[1]}+1 )), $(( ${delimiters[2]}-1 ))p" "${LOGS_DIR}${file}" >> ${PARSED_LOGS_OUTPUT}$node-${FILE_NAMES[1]}
+        echo "EJECUCION DE ${file}" >> ${PARSED_LOGS_OUTPUT}$node-${FILE_NAMES[2]}
+	sed -n "$(( ${delimiters[2]}+1 )), $(( ${delimiters[3]}-1 ))p" "${LOGS_DIR}${file}" >> ${PARSED_LOGS_OUTPUT}$node-${FILE_NAMES[2]}
+        echo "EJECUCION DE ${file}" >> ${PARSED_LOGS_OUTPUT}$node-${FILE_NAMES[3]}
+	sed -n "$(( ${delimiters[3]}+1 )), $(( ${delimiters[4]}-1 ))p" "${LOGS_DIR}${file}" >> ${PARSED_LOGS_OUTPUT}$node-${FILE_NAMES[3]}
+        echo "EJECUCION DE ${file}" >> ${PARSED_LOGS_OUTPUT}$node-${FILE_NAMES[4]}
+	sed -n "$(( ${delimiters[4]}+1 )), $(( ${delimiters[5]}-1 ))p" "${LOGS_DIR}${file}" >> ${PARSED_LOGS_OUTPUT}$node-${FILE_NAMES[4]}
+        echo "EJECUCION DE ${file}" >> ${PARSED_LOGS_OUTPUT}$node-${FILE_NAMES[5]}
+	sed -n "$(( ${delimiters[5]}+1 )), $(( ${delimiters[6]}-1 ))p" "${LOGS_DIR}${file}" >> ${PARSED_LOGS_OUTPUT}$node-${FILE_NAMES[5]}
+        echo "EJECUCION DE ${file}" >> ${PARSED_LOGS_OUTPUT}$node-${FILE_NAMES[6]}
+	sed -n "$(( ${delimiters[6]}+1 )), $(( ${delimiters[7]}-1 ))p" "${LOGS_DIR}${file}" >> ${PARSED_LOGS_OUTPUT}$node-${FILE_NAMES[6]}
+        echo "EJECUCION DE ${file}" >> ${PARSED_LOGS_OUTPUT}$node-${FILE_NAMES[7]}
+	sed -n "$(( ${delimiters[7]}+1 )),$ p" "${LOGS_DIR}${file}" >> ${PARSED_LOGS_OUTPUT}$node-${FILE_NAMES[7]}
+done
+\end{verbatim}
+\end{footnotesize}
+\end{center}\vspace{4mm}

@@ -1,82 +1,103 @@
-\section{Algoritmo XXX}
+\section{Script administración de usuarios}
 \label{Apendice1:XXX}
 
 \begin{center}
 \begin{footnotesize}
 \begin{verbatim}
+#!/bin/sh
 
-/***********************************************************************************
-*
-* Fichero .h
-*
-***********************************************************************************
-*
-* AUTORES
-*   
-*
-* FECHA
-*   
-*
-* DESCRIPCION
-*   
-*
-************************************************************************************/
+show_help()
+{
+   # Display Help
+   echo "Bash utility for cluster user management"
+   echo
+   echo "Syntax: cluster-user-management [a|m|d|u:]"
+   echo "options:"
+   echo " -h     		Print this Help."
+   echo " -a <user>    		Create given user."
+   echo " -m <user>    		Modify given user."
+   echo " -d <user>    		Delete given user."
+   echo " -q <quota>            Set user quota space. [20G default]"
+   echo
+   echo "Examples: "
+   echo " - New user: -a test -q 25G"
+   echo " - Modify user: -m test -q 500M"
+   echo " - Delete user: -d test"
+}
 
+# $1 : username
+# $2 : quota size (20G default)
+add_user()
+{
+    if id -u "${1}" >/dev/null 2>&1; then
+	    echo "[!] Ya existe el usuario ${1}."
+	    return
+    fi
+	
+    nscd --invalidate=passwd
+    cpu useradd $1 -m  -p"${1}bolido"
+    setquota -u $1 $2 $2 0 0 /home
+    mkdir "/home/${1}/.ssh"
+    ssh-keygen -t rsa -f "/home/${1}/.ssh/id_rsa" -q -N ""
+    cp "/home/${1}/.ssh/id_rsa.pub" "/home/${1}/.ssh/authorized_keys"
+    chown -R $1 "/home/${1}/.ssh" && chgrp -R $1 "/home/${1}/.ssh"
+    echo "The password for user ${1} is: ${1}bolido"
+}
+
+# $1 : username
+delete_user()
+{
+    cpu userdel -r $1
+    cpu groupdel $1
+    nscd --invalidate=passwd
+}
+
+# $1 : username
+# $2 : quota size (20G default)
+modify_user()
+{
+    setquota -u $1 $2 $2 0 0 /home
+}
+
+# A POSIX variable
+OPTIND=1         # Reset in case getopts has been used previously in the shell.
+OPERATION=
+QUOTA="20G"
+USERNAME=
+
+if [ $# -eq 0 ]; then
+    show_help
+    exit 0
+fi
+
+while getopts "h?a:d:m:q:" opt; do
+  case "$opt" in
+    h|\?)
+      show_help
+      exit 0
+      ;;
+    a)  [ -n "$OPERATION" ] && show_help && exit || OPERATION="ADD_USER" && USERNAME=$OPTARG
+      ;;
+    d)  [ -n "$OPERATION" ] && show_help && exit || OPERATION="DELETE_USER" && USERNAME=$OPTARG
+      ;;
+    m)  [ -n "$OPERATION" ] && show_help && exit || OPERATION="MODIFY_USER" && USERNAME=$OPTARG
+      ;;
+    q) QUOTA=$OPTARG
+      ;;
+  esac
+done
+
+shift $((OPTIND-1))
+
+[ "${1:-}" = "--" ] && shift
+
+[ -z "$USERNAME" ] && show_help && exit
+
+case $OPERATION in
+    ADD_USER) add_user $USERNAME $QUOTA;;
+    DELETE_USER) delete_user $USERNAME;;
+    MODIFY_USER) modify_user $USERNAME $QUOTA;;
+esac
 \end{verbatim}
 \end{footnotesize}
-\end{center}
-
-\section{Algoritmo YYY}
-\label{Apendice1:YYY}
-
-\begin{center}
-\begin{footnotesize}
-\begin{verbatim}
-
-
-/***********************************************************************************
- *
- * Fichero .h
- *
- ***********************************************************************************
- *
- * AUTORES
- *
- * FECHA
- *
- * DESCRIPCION
- *
- *
- ************************************************************************************/
- 
-\end{verbatim}
-\end{footnotesize}
-\end{center}
-
-\section{Algoritmo ZZZ}
-\label{Apendice1:ZZZ}
-
-\begin{center}
-\begin{footnotesize}
-\begin{verbatim}
-
-
-/***********************************************************************************
- *
- * Fichero .h
- *
- ***********************************************************************************
- *
- * AUTORES
- *
- * FECHA
- *
- * DESCRIPCION
- *
- *
- ************************************************************************************/
- 
-\end{verbatim}
-\end{footnotesize}
-\end{center}
-
+\end{center}\vspace{4mm}

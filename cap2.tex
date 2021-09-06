@@ -1,13 +1,100 @@
-Los capíulos intermedios servián para cubrir los siguientes aspectos: antecedentes, problemática o estado del arte, objetivos, fases y desarrollo del proyecto.
+En este capítulo se describe el estado del arte tanto antes de empezar el proyecto como después, así como los recursos disponibles, el análisis de posibles herramientas y las herramientas utilizadas para llevar a cabo la configuración del \emph{cluster} para computación de altas prestaciones.
 
-\bigskip
-En el capítulo anterior se ha introducido bla, bla, bla ....
+\section{Estado del arte}
 
-\section{Primera sección de otro capitulo}
+Antes de comenzar el proyecto, el grupo de investigación PAL (Parallel Algorithms and Languages) contaba ya con tres máquinas con las que realizar computación de altas prestaciones: Bolido, Rayo y Centella.
+\vspace{2mm}
 
-\begin{figure}[htb]
-   \centering
-   \includegraphics[width=0.5\linewidth]{images/by-nd_88x31}
-   \caption{Otra figura}
-   \label{chapter:intro}
-\end{figure}
+Cada una de estas máquinas tiene un procesador AMD con 48 núcleos y 64 gigas de RAM. Bolido tiene dos discos duros de 500GB: uno de tipo SAS y otro SATA. Rayo también cuenta con dos discos duros, aunque ambos son de tipo SAS y Centella cuenta con un único disco duro de 500GB de tipo SAS.
+\vspace{2mm}
+
+Estas máquinas se utilizaban de manera individual y no tenían ningún mantenimiento ni ninguna gestión. Los usuarios accedían a cualquiera de ellas cuando necesitaban realizar alguna prueba, compilaban su código y lo dejaban ejecutándose con un número de procesadores determinados. Con el paso de los años, el sistema operativo de estas máquinas quedó también obsoleto.
+\vspace{2mm}
+ 
+Con el afán de poner en funcionamiento de nuevo estas máquinas y organizar mejor los recursos disponibles, se decidió actualizar y configurar de nuevo los sistemas y crear un cluster, en el que se centralicen los usuarios y la gestión de las máquinas disponibles.
+\vspace{2mm}
+
+Para la actualización de los sistemas, se tuvo que ir físicamente al STIC (Servicio TIC de la Universidad de La Laguna) porque la interfaz remota iDRAC \cite{idrac} del servidor era demasiado lenta. En concreto, Bolido y Centella se tuvieron que instalar desde cero, para configurar el sistema con LVM (gestor de volúmenes lógicos) y Debian 10.
+\vspace{2mm}
+
+Por último, se realizó la configuración del cluster con distintas herramientas open source y se realizó un análisis de rendimiento.
+\vspace{2mm}
+
+\section{Buenas prácticas}
+
+Es conveniente que al implementar un \emph{cluster} se utilicen una serie de buenas prácticas, con el fin de facilitar tanto el mantenimiento como la administración del sistema en el futuro y mantener seguros los sistemas. Para este caso, me he apoyado en un paper sobre las mejores prácticas antes de implementar el sistema \cite{6114480} y de elegir las herramientas.
+\vspace{2mm}
+
+Para nuestro caso, lo que más nos interesa en nuestro sistema es minimizar el trabajo de administración y gestión de sistemas. Esto lo logramos con:
+
+\begin{itemize}
+    \item \textbf{Centralización: } conviene que todo lo que sea común en todas las máquinas se encuentre centralizado: usuarios, librerías, software, autenticación, manejo de recursos.
+    \item \textbf{Escalabilidad: } hacer que las modificaciones del \emph{cluster} sean lo más sencillas posibles, tanto para añadir como para eliminar nodos. 
+    \item \textbf{Administración de sistemas mínimo: } trazabilidad sencilla y sistemas robustos. Administrar muchas máquinas puede ser complejo, por lo que es conveniente que los sistemas sean lo más minimalistas posibles, especialmente los nodos.
+    \item \textbf{Administración flexible del entorno de usuario: } permitir al usuario modificar el entorno de software fácilmente y ajustarlo a sus necesidades.
+\end{itemize}
+
+
+
+\section{Análisis de herramientas}
+
+Existen diversas herramientas para configurar un \emph{cluster} para realizar programación paralela. En este apartado, se definen las herramientas utilizadas para la implementación de nuestro sistema y las alternativas que se han encontrado y descartado.
+
+\subsection{Slurm}
+
+Para el sistema HPC, necesitábamos un software que permitiera aceptar trabajos, planificarlos y monitorizarlos. Básicamente, un software de planificación de tareas. Para ello, se decidió utilizar Slurm \cite{slurmquickstart}.
+\vspace{2mm}
+
+Slurm es un planificador de tareas de código abierto \cite{slurmrepo} para sistemas basados en Linux que es tolerable a fallos y que permite escalar la gestión de sistemas distribuidos.
+\vspace{2mm}
+
+Con Slurm, se puede asignar usuarios a nodos de cómputo, con acceso no exclusivo, exclusivo, con recursos compartidos o con recursos limitados. Permite también iniciar, realizar y monitorizar los trabajos sobre los nodos y gestionar las colas de trabajos pendientes.
+\vspace{2mm}
+
+Adicionalmente, se puede extender con diferentes plugins, para realizar autenticación, registro de tareas completadas, gestión de energía, etc.
+\vspace{2mm}
+
+Como alternativa, se consideró TORQUE y Kubernetes.
+
+\vspace{2mm}
+TORQUE (Terascale Open-source Resource and Queue manager) \cite{torquerepo} es un planificador de trabajos similar a Slurm que no llegó a mantenerse en el tiempo, por lo que no era conveniente utilizarlo.
+
+\vspace{2mm}
+Kubernetes \cite{kubernetesrepo} es un orquestador de código abierto para cargas de trabajo basadas en contenedores. Permite manejar cargas de trabajo similar a un cluster HPC, aunque no ofrece todas las capacidades de gestión de trabajos que slurm. 
+
+\vspace{2mm}
+Kubernetes se basa en cluster de nodos que se controlan por un master. Cada nodo tiene una serie de contenedores que comparten recursos y existen en la red local, por lo que pueden comunicarse entre sí. Se descartó debido a que su uso es idóneo para escalar tecnologías \emph{cloud} y contenedores basados en microservicios, mientras que slurm permite lanzar aplicaciones en escala.
+
+\subsection{Munge}
+
+Munge \cite{munge} es un servicio de autenticación para crear y validar credenciales, diseñado para ser escalable en sistemas distribuidos.
+\vspace{2mm}
+
+Es un software completamente necesario para el funcionamiento correcto de slurm, ya que lo utiliza para autenticar los trabajos.
+
+\subsection{OpenSSH}
+
+Para la conexión remota cifrada entre máquinas, se utilizó OpenSSH \cite{openssh}, que es la implementación libre utilizada generalmente en sistemas linux.
+
+\subsection{OpenLDAP}
+
+Para el acceso unificado a la información de red y autenticación centralizada, se utilizó OpenLDAP \cite{openldap}.
+
+\vspace{2mm}
+
+En concreto, se comparten en todos los sistemas los ficheros /etc/passwd y /etc/group globales para la autenticación de los usuarios.
+
+\subsection{NTP}
+
+Se utiliza la implementación de NTP para sincronizar los relojes del cluster, completamente necesario para evitar problemas
+\vspace{2mm}
+
+Como alternativa, existe chrony \cite{chrony}. 
+\vspace{2mm}
+
+Para nuestro caso de uso, es preferible utilizar el demonio NTP porque nuestros sistemas siempre están conectados por red. Chrony se considera mejor para sistemas que se desconectan de una red o se suspenden de forma frecuente, ya que tiene una sincronización más rápida y mejor respuesta a los cambios en la frecuencia del reloj \cite{chronyvsntp}.
+
+\subsection{NFS}
+
+Por último, se utilizó NFS \cite{nfs} (Network File System) para centralizar el software disponible y las carpetas de los usuarios. En cambio, autofs  \cite{nfsautofs} se utilizó para montar dichos directorios en los clientes (nodos de cómputo).
+

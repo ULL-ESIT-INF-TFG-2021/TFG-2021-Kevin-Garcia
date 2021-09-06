@@ -5,6 +5,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage[spanish]{babel}
 \usepackage{alltt}
+\usepackage{minted}
 
 \usepackage[ruled,vlined,commentsnumbered,linesnumbered,inoutnumbered,titlenotnumbered,noend]{algorithm2e}
 \SetKwRepeat{Do}{do}{while}
@@ -103,6 +104,9 @@
 \renewcommand\listtablename{Índice de Tablas}    
 \renewcommand\listfigurename{Índice de Figuras}    
 
+\renewcommand{\lstlistingname}{Listado}
+\renewcommand{\lstlistlistingname}{Índice de \lstlistingname s}% 
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % First Page
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -123,9 +127,9 @@
 
 \HRule
 \begin{flushright}
-        {\Huge Titulo del trabajo} \\[2.5mm]
-        {\Large \textit{Título del trabajo en inglés}} \\[5mm]
-        {\Large Nombre y apellidos} \\[5mm]
+        {\Huge Administración de nodos de cómputo de altas prestaciones} \\[2.5mm]
+        {\Large \textit{High-performance compute node management}} \\[5mm]
+        {\Large Kevin Eliezer García Peña} \\[5mm]
 
 
 \end{flushright}
@@ -143,10 +147,10 @@
 \newpage
 \thispagestyle{empty}
 
-D. {\bf Nombre Apellido1 Apellido2}, con N.I.F. 12.345.678-X profesor Titular de Universidad adscrito al Departamento de Nombre del Departamento de la Universidad de La Laguna, como tutor
+D. {\bf Eduardo Manuel Segredo González}, con N.I.F. 78.564.242-Z, Profesor Ayudante Doctor adscrito al Departamento de Ingeniería Informática y de Sistemas de la Universidad de La Laguna, como tutor
 
 \bigskip
-D. {\bf Nombre Apellido1 Apellido2}, con N.I.F. 12.345.678-X profesor Titular de Universidad adscrito al Departamento de Nombre del Departamento de la Universidad de La Laguna, como cotutor\pagestyle{empty}
+D. {\bf Vicente Blanco Pérez}, con N.I.F. 42.171.808-C, Profesor Titular de Universidad adscrito al Departamento de Ingeniería Informática y de Sistemas de la Universidad de La Laguna, como cotutor\pagestyle{empty}
 
 \bigskip
 \bigskip
@@ -157,14 +161,15 @@ D. {\bf Nombre Apellido1 Apellido2}, con N.I.F. 12.345.678-X profesor Titular de
 Que la presente memoria titulada:
 
 \bigskip
-''{\it Título del Trabajo}''
+''{\it Administración de nodos de cómputo de altas prestaciones}''
 
 \bigskip
 \bigskip
 \bigskip
 
-\noindent ha sido realizada bajo su dirección por D. {\bf Nombre Apellido1 Apellido2},
-con N.I.F. 12.345.678-X.
+\noindent ha sido realizada bajo su dirección por D. {\bf Kevin Eliezer García Peña}, con N.I.F. 
+
+\noindent 54.113.567-H.
 
 \bigskip
 \bigskip
@@ -176,20 +181,33 @@ oportunos firman la presente en La Laguna a \today
 \newpage
 \thispagestyle{empty}
 
-{ \flushright
 
+
+{
+\begin{flushright}
 \begin{LARGE}
 Agradecimientos
 \end{LARGE}
+\end{flushright}
 
 \hspace{3mm}
 
-\begin{large}
-XXXXX
-\end{large}
+En primer lugar, agradecer a todos los profesores por la formación recibida durante estos últimos 5 años y hacer especial mención a Eduardo Manuel Segredo González y Vicente Blanco Pérez por la tutorización y guía de este proyecto final.
+\vspace{2mm}
 
+En segundo lugar, agradecer a todas las personas que he conocido durante mis estudios y que, de alguna manera u otra, han aportado en mi desarrollo profesional: organizadores, participantes y ponentes del CESINF y las Jornadas Técnicas de Ingeniería, compañeros de delegación y de clase.
+
+\vspace{2mm}
+
+Por último, agradecer a mi familia por el apoyo incondicional y confianza en mí. Agradecer también a todas las personas de mi entorno más cercano que, de alguna manera u otra, me han ayudado durante estos últimos meses, que han sido más complicados de lo habitual.
+
+\vspace{4mm}
+La Laguna, \today
 }
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \newpage
 \thispagestyle{empty}
 
@@ -199,20 +217,6 @@ Licencia
 \end{LARGE}
 
 \bigskip
-* Si NO quiere permitir que se compartan las adaptaciones de tu obra y NO quieres permitir usos comerciales de tu obra indica:
-
-\begin{center}
-\includegraphics[scale=1.8]{images/by-nc-nd_88x31}\\[5mm]
-\end{center}
-
-\begin{large}
-© Esta obra está bajo una licencia de Creative Commons Reconocimiento-NoComercial-SinObraDerivada 4.0 Internacional.
-\end{large}
-
-\bigskip
-\bigskip
-\bigskip
-* Si quiere permitir que se compartan las adaptaciones de tu obra mientras se comparta de la misma manera y NO quieres permitir usos comerciales de tu obra indica:
 
 \begin{center}
 \includegraphics[scale=1.8]{images/by-nc-sa_88x31}\\[5mm]
@@ -222,71 +226,18 @@ Licencia
 © Esta obra está bajo una licencia de Creative Commons Reconocimiento-NoComercial-CompartirIgual 4.0 Internacional.
 \end{large}
 
-\bigskip
-\bigskip
-\bigskip
-* Si quiere permitir que se compartan las adaptaciones de tu obra y NO quieres permitir usos comerciales de tu obra indica:
-
-\begin{center}
-\includegraphics[scale=1.8]{images/by-nc_88x31}\\[5mm]
-\end{center}
-
-\begin{large}
-© Esta obra está bajo una licencia de Creative Commons Reconocimiento-NoComercial 4.0 Internacional.
-\end{large}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\newpage
-\thispagestyle{empty}
-
-\bigskip
-*Si NO quiere permitir que se compartan las adaptaciones de tu obra y quieres permitir usos comerciales de tu obra indica:
-
-\begin{center}
-\includegraphics[scale=1.8]{images/by-nd_88x31}\\[5mm]
-\end{center}
-
-\begin{large}
-© Esta obra está bajo una licencia de Creative Commons Reconocimiento-SinObraDerivada 4.0 Internacional.
-\end{large}
-
-\bigskip
-\bigskip
-\bigskip
-* Si quiere permitir que se compartan las adaptaciones de tu obra mientras se comparta de la misma manera y quieres permitir usos comerciales de tu obra (licencia de Cultura Libre) indica:
-
-\begin{center}
-\includegraphics[scale=1.8]{images/by-sa_88x31}\\[5mm]
-\end{center}
-
-\begin{large}
-© Esta obra está bajo una licencia de Creative Commons Reconocimiento-CompartirIgual 4.0 Internacional.
-\end{large}
-
-\bigskip
-\bigskip
-\bigskip
-* Si quiere permitir que se compartan las adaptaciones de tu obra y quieres permitir usos comerciales de tu obra (licencia de Cultura Libre) indica:
-
-\begin{center}
-\includegraphics[scale=1.8]{images/by_88x31}\\[5mm]
-\end{center}
-
-\begin{large}
-© Esta obra está bajo una licencia de Creative Commons Reconocimiento 4.0 Internacional.
-\end{large}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newpage 
 \thispagestyle{empty}
 
 \begin{abstract}
 {\em
-xxxxx
+El objetivo de este Trabajo Fin de Grado es implementar un cluster para computación de altas prestaciones (HPC, High Perfomance Computing por sus siglas en inglés) aplicando buenas prácticas para implementar seguridad y facilitar las labores posteriores de gestión y mantenimiento.
+
+Para ello, el grupo PAL (Parallel Algorithms and Languages) de la ULL cuenta con tres máquinas: Bólido, Rayo y Centella. Utilizando herramientas de código abierto (Open Source), configuramos un cluster en el que Bólido es la máquina de entrada (Front-End), mientras que Rayo y Centella son nodos de cómputo. Finalmente, realizamos pruebas para medir el rendimiento y comprobar el correcto funcionamiento del cluster.
 }
 
 \begin{palabrasClave}
-xxxxx, xxxx, xxxx
+HPC, cluster, linux, computación, paralelismo
 \end{palabrasClave}
 
 \end{abstract}
@@ -297,12 +248,14 @@ xxxxx, xxxx, xxxx
 
 \begin{summary}
 {
-xxxxx
+The main aim of this work is to implement a cluster for high performance computing, using the best practices for systems security and subsequent management and maintance. 
+
+To be able to do it, the group Parallel Algorithms and Languages from University La Laguna has three machines: Bolido, Rayo and Centella. Thanks to open source tools and these machines, a high performance computing cluster was set up, in which Bolido works as the front-end machine and Rayo and Centella are just computing nodes. Finally, some tests were made to measure the cluster's performance and the right operation.
 }
 
 \em
 \begin {keywords}
-xxxx, xxxx, xxxx
+HPC, cluster, linux, computing, parallelism
 \end {keywords}
 
 \end{summary}
@@ -334,6 +287,7 @@ xxxx, xxxx, xxxx
 \newpage{\pagestyle{empty}}
 
 \listoffigures
+\lstlistoflistings
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newpage{\pagestyle{empty}}
@@ -361,7 +315,7 @@ xxxx, xxxx, xxxx
 \newpage{\pagestyle{empty}}
 \thispagestyle{empty}
 
-\chapter{\LARGE Título del Capítulo 2}
+\chapter{\LARGE Recursos disponibles}
 \label{chapter:dos}
 
 \input{cap2.tex}
@@ -370,7 +324,7 @@ xxxx, xxxx, xxxx
 \newpage{\pagestyle{empty}}
 \thispagestyle{empty}
 
-\chapter{\LARGE Título del Capítulo 3}
+\chapter{\LARGE Configuración de cluster HPC}
 \label{chapter:tres}
 
 \input{cap3.tex}
@@ -379,7 +333,7 @@ xxxx, xxxx, xxxx
 \newpage{\pagestyle{empty}}
 \thispagestyle{empty}
 
-\chapter{\LARGE Título del Capítulo 4}
+\chapter{\LARGE Análisis de resultados}
 \label{chapter:cuatro}
 
 \input{cap4.tex}
@@ -415,23 +369,22 @@ xxxx, xxxx, xxxx
 \newpage{\pagestyle{empty}\cleardoublepage}
 \thispagestyle{empty}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{appendix}
-
-\chapter{\LARGE Título del Apéndice 1}
+\chapter{\LARGE Scripts}
 \label{appendix:1}
 \input{apendice1.tex}
-
-\chapter{\LARGE Título del Apéndice 2}
 \label{appendix:2}
 \input{apendice2.tex}
-
+\label{appendix:3}
+\input{apendice3.tex}
 \end{appendix}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Aquí figurará la bibliografía
-\bibliographystyle{ieeetr}
+\bibliographystyle{IEEEtran}
 \bibliography{memtfg}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \end{document}
 
